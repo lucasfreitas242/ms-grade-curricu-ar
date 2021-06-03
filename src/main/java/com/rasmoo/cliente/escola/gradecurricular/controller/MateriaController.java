@@ -15,83 +15,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rasmoo.cliente.escola.gradecurricular.entity.MateriaEntity;
-import com.rasmoo.cliente.escola.gradecurricular.repository.IMateriaRepository;
+import com.rasmoo.cliente.escola.gradecurricular.service.IMateriaService;
 
-
-@RestController 
+@RestController
 @RequestMapping("/materia")
 
 public class MateriaController {
-	
+
 	@Autowired
-	private IMateriaRepository materiaRepository;
-	
+	private IMateriaService materiaService;
+
 	@GetMapping
-	public ResponseEntity<List<MateriaEntity>> listarMaterias(){
-		return ResponseEntity.status(HttpStatus.OK).body(this.materiaRepository.findAll());
+	public ResponseEntity<List<MateriaEntity>> listarMaterias() {
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.listar());
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<MateriaEntity> consultarMateria(@PathVariable Long id) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.materiaRepository.findById(id).get());
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.consultar(id));
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Boolean> deletaMateria(@PathVariable Long id) {
-		try {
-			this.materiaRepository.deleteById(id);
-			return ResponseEntity.status(HttpStatus.OK).body(true);
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.excluir(id));
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Boolean> cadastrarMaterias(@RequestBody MateriaEntity materia){
-		try {
-			this.materiaRepository.save(materia);
-			return ResponseEntity.status(HttpStatus.OK).body(true); 
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.OK).body(false); 
-		}
-		
+	public ResponseEntity<Boolean> cadastrarMaterias(@RequestBody MateriaEntity materia) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.cadastrar(materia));
+
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<Boolean> atualizaMateria(@RequestBody MateriaEntity materia){
-		try {
-			MateriaEntity materiaEntityAtualizada = this.materiaRepository.findById(materia.getId()).get();
-			
-			materiaEntityAtualizada.setNome(materia.getNome());
-			materiaEntityAtualizada.setHoras(materia.getHoras());
-			materiaEntityAtualizada.setCodigo(materia.getCodigo());
-			materiaEntityAtualizada.setFrequencia(materia.getFrequencia());
-			
-			this.materiaRepository.save(materiaEntityAtualizada);
-			
-			return ResponseEntity.status(HttpStatus.OK).body(true);
-			
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-		}
+	public ResponseEntity<Boolean> atualizaMateria(@RequestBody MateriaEntity materia) {
+
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.atualizar(materia));
+
 	}
-		
-		
-	}
-	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
