@@ -19,16 +19,24 @@ public class MateriaService implements IMateriaService {
 	@Override
 	public Boolean atualizar(MateriaEntity materia) {
 		try {
-			MateriaEntity materiaEntityAtualizada = this.materiaRepository.findById(materia.getId()).get();
+			
+			Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(materia.getId());
+			
+			if (materiaOptional.isPresent()) {
+				
+				MateriaEntity materiaEntityAtualizada = materiaOptional.get();
+				
+				materiaEntityAtualizada.setNome(materia.getNome());
+				materiaEntityAtualizada.setHoras(materia.getHoras());
+				materiaEntityAtualizada.setCodigo(materia.getCodigo());
+				materiaEntityAtualizada.setFrequencia(materia.getFrequencia());
 
-			materiaEntityAtualizada.setNome(materia.getNome());
-			materiaEntityAtualizada.setHoras(materia.getHoras());
-			materiaEntityAtualizada.setCodigo(materia.getCodigo());
-			materiaEntityAtualizada.setFrequencia(materia.getFrequencia());
+				this.materiaRepository.save(materiaEntityAtualizada);
 
-			this.materiaRepository.save(materiaEntityAtualizada);
-
-			return true;
+				return true;
+			}
+			
+ 			return false;
 
 		} catch (Exception e) {
 			return false;

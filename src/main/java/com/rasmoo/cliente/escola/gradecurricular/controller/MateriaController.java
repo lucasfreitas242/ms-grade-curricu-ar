@@ -44,7 +44,7 @@ public class MateriaController {
 	@PostMapping
 	public ResponseEntity<Boolean> cadastrarMaterias(@RequestBody MateriaEntity materia) {
 
-		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.cadastrar(materia));
+		return ResponseEntity.status(HttpStatus.CREATED).body(this.materiaService.cadastrar(materia));
 
 	}
 
